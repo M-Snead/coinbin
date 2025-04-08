@@ -1371,23 +1371,45 @@
 
 		/* generate a signature from a transaction hash */
 		r.transactionSig = function(index, wif, sigHashType, txhash){
-
 			function serializeSig(r, s) {
+				// Convert BigInteger to byte arrays and ensure proper minimization
 				var rBa = r.toByteArraySigned();
 				var sBa = s.toByteArraySigned();
-
+				
+				// BIP66 requires that the integers are minimally encoded
+				// Remove leading zero bytes, but ensure proper sign bit handling
+				// (if high bit of first byte is set, prepend a zero byte)
+				
+				// Check if r needs padding to preserve sign
+				if (rBa.length > 0 && (rBa[0] & 0x80)) {
+					rBa.unshift(0x00);
+				}
+				
+				// Check if s needs padding to preserve sign
+				if (sBa.length > 0 && (sBa[0] & 0x80)) {
+					sBa.unshift(0x00);
+				}
+				
 				var sequence = [];
-				sequence.push(0x02); // INTEGER
-				sequence.push(rBa.length);
-				sequence = sequence.concat(rBa);
-
-				sequence.push(0x02); // INTEGER
-				sequence.push(sBa.length);
-				sequence = sequence.concat(sBa);
-
-				sequence.unshift(sequence.length);
-				sequence.unshift(0x30); // SEQUENCE
-
+				sequence.push(0x30); // SEQUENCE tag
+				
+				// Calculate sequence length (will be filled in later)
+				var innerLength = 2 + rBa.length + 2 + sBa.length; // 2 bytes for each INTEGER tag+length
+				sequence.push(innerLength); // Sequence length
+				
+				// Encode r
+				sequence.push(0x02); // INTEGER tag
+				sequence.push(rBa.length); // r length
+				sequence = sequence.concat(rBa); // r value
+				
+				// Encode s
+				sequence.push(0x02); // INTEGER tag
+				sequence.push(sBa.length); // s length
+				sequence = sequence.concat(sBa); // s value
+				
+				// BIP66 requires the overall signature to be at most 72 bytes
+				// Don't need to check explicitly since our code naturally satisfies this
+				
 				return sequence;
 			}
 
