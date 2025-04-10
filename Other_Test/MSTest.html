@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Bitcoin DER Signature Generator</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    textarea, input, button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 8px;
+      font-size: 1em;
+    }
+    .result {
+      margin-top: 20px;
+      background: #f4f4f4;
+      padding: 10px;
+      border: 1px solid #ccc;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h1>Bitcoin DER Signature Generator</h1>
+  <p>Generate a BIP66 DER signature using your WIF private key and transaction hash</p>
+
+  <label>WIF Key:</label>
+  <textarea id="wif" rows="2" placeholder="Enter your WIF key here..."></textarea>
+
+  <label>Transaction Hash (hex):</label>
+  <textarea id="txhash" rows="2" placeholder="Enter 64-character hex hash..."></textarea>
+
+  <button id="signButton">Sign Transaction</button>
+
+  <div class="result" id="result"></div>
+
+  <!-- Load the required libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/bitcoinjs-lib@5.2.0/dist/bitcoinjs-lib.min.js"></script>
+  <script>
+    // Define bitcoinJS globally first
+    const bitcoinJS = window.bitcoin || window.bitcoinjs || window.bitcoinjsLib;
+
+    document.getElementById('signButton').addEventListener('click', () => {
+      const resultDiv = document.getElementById('result');
+      resultDiv.textContent = ''; // Clear previous
+
+      try {
+        // Check if bitcoinjs-lib is loaded properly
+        if (typeof bitcoinJS === 'undefined') {
+          throw new Error('Bitcoin library not properly loaded. Check console for details.');
+        }
+        
+        console.log("Bitcoin library status:", {
+          windowBitcoin: typeof window.bitcoin !== 'undefined',
+          windowBitcoinjs: typeof window.bitcoinjs !== 'undefined',
+          windowBitcoinjsLib: typeof window.bitcoinjsLib !== 'undefined',
+          bitcoinJS: typeof bitcoinJS !== 'undefined'
+        });
+
+        const wif = document.getElementById('wif').value.trim();
+        const txhash = document.getElementById('txhash').value.trim();
+
+        if (!wif || !txhash) {
+          throw new Error('Please enter both WIF and transaction hash.');
+        }
+
+        if (!/^[a-fA-F0-9]{64}$/.test(txhash)) {
+          throw new Error('Transaction hash must be a 64-character hex string.');
+        }
+
+        // Create key pair from WIF
+        const keyPair = bitcoinJS.ECPair.fromWIF(wif);
+        
+        // Create hash buffer from transaction hash
+        const hashBuffer = Buffer.from(txhash, 'hex');
+        
+        // Sign the transaction hash
+        const signature = keyPair.sign(hashBuffer);
+        
+        // Encode the signature into DER format (BIP66 compliant)
+        const derSignature = bitcoinJS.script.signature.encode(signature, bitcoinJS.Transaction.SIGHASH_ALL);
+        
+        // Display the results
+        resultDiv.textContent = 'DER Signature (hex):\n' + derSignature.toString('hex');
+        
+        // Also show the signature hash type
+        const sigHashType = derSignature[derSignature.length - 1];
+        resultDiv.textContent += '\n\nSignature Hash Type: ' + sigHashType + 
+                               ' (SIGHASH_ALL = 1)';
+
+      } catch (err) {
+        resultDiv.textContent = 'Error: ' + err.message;
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
