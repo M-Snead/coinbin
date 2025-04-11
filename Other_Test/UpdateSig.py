@@ -24,10 +24,10 @@ def push_data(data_hex):
 
 # === Replace these with your actual values ===
 # Your new canonical DER signature + sighash flag (in hex)
-new_signature_hex = "3045022100a1b2c3d4e5f67890abcdef01234567890abcdef01234567890abcdef01234502201a2b3c4d5e6f7890abcdef01234567890abcdef01234567890abcdef01234501"
+new_signature_hex = "xxxx"
 
 # Your public key in hex (uncompressed is 65 bytes; compressed is 33 bytes)
-public_key_hex = "041b2c906b7c481f4ab3d8189d911041157ff93543bd89c2267796c16b953d7ecdd925d69974e471dee85a663811cd669417195a63d1550b77f3b37f465b3b6882"
+public_key_hex = "xxxx"
 
 # =================================================
 
@@ -43,7 +43,7 @@ tx = {
     "locktime": 884536,
     "ins": [
         {
-            "txid": "39a7cf8a69891b86fabdc779b1e21d7c97522efd2954d7f26632dc0d4ff767df",
+            "txid": "xxxx",
             "vout": 0,
             # Our updated scriptSig goes here.
             "scriptSig": {"hex": new_scriptSig},
@@ -56,15 +56,15 @@ tx = {
             "value": 33900000000,
             "scriptPubKey": {
                 "hex": "0014f5689400671c266948f407e484c0c54c663979ab",
-                "addresses": ["bc1q745fgqr8rsnxjj85qljgfsx9f3nrj7dt6whruc"],
+                "addresses": "xxxx"],
                 "asm": "OP_0 f5689400671c266948f407e484c0c54c663979ab"
             }
         },
         {
             "value": 99999644,
             "scriptPubKey": {
-                "hex": "001412ccc1e401ac8c4f2d93898d704d91626dbde916",
-                "addresses": ["bc1qztxvreqp4jxy7tvn3xxhqnv3vfkmm6gk83e8c6"],
+                "hex": "xxxx",
+                "addresses": ["xxxx"],
                 "asm": "OP_0 12ccc1e401ac8c4f2d93898d704d91626dbde916"
             }
         }
