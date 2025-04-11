@@ -41,14 +41,14 @@ def push_data(data_hex):
 # Replace these placeholders with your actual values.
 # Your updated canonical DER signature with sighash flag appended.
 new_signature_hex = (
-    "3045022100a1b2c3d4e5f67890abcdef01234567890abcdef01234567890"
-    "abcdef01234502201a2b3c4d5e6f7890abcdef01234567890abcdef012345"
+    "xxxx"
+    "xxxx"
     "67890abcdef01234501"
 )
 # Your public key in hex (uncompressed is 65 bytes; compressed is 33 bytes)
 public_key_hex = (
-    "041b2c906b7c481f4ab3d8189d911041157ff93543bd89c2267796c16b953d7e"
-    "cdd925d69974e471dee85a663811cd669417195a63d1550b77f3b37f465b3b6882"
+    "xxxx"
+    "xxxx"
 )
 # ======================================================
 
@@ -60,7 +60,7 @@ print(scriptSig_hex)
 # ---------------------------------------------------------------------
 # Build the transaction input.
 #
-prev_txid_str = "39a7cf8a69891b86fabdc779b1e21d7c97522efd2954d7f26632dc0d4ff767df"
+prev_txid_str = "xxxx"
 vout = 0
 
 # Convert the previous txid into bytes (little-endian format)
@@ -76,12 +76,12 @@ txin = CTxIn(outpoint, CScript(x(scriptSig_hex)), nSequence=4294967293)
 #
 # Output 0: spending 33,900,000,000 satoshis to a P2WPKH address.
 value0 = 33900000000
-scriptPubKey0_hex = "0014f5689400671c266948f407e484c0c54c663979ab"
+scriptPubKey0_hex = "xxxx"
 txout0 = CTxOut(value0, CScript(x(scriptPubKey0_hex)))
 
 # Output 1: spending 99,999,644 satoshis to another P2WPKH address.
 value1 = 99999644
-scriptPubKey1_hex = "001412ccc1e401ac8c4f2d93898d704d91626dbde916"
+scriptPubKey1_hex = "xxxx"
 txout1 = CTxOut(value1, CScript(x(scriptPubKey1_hex)))
 
 # ---------------------------------------------------------------------
@@ -119,14 +119,14 @@ tx_json = {
             "value": value0,
             "scriptPubKey": {
                 "hex": scriptPubKey0_hex,
-                "addresses": ["bc1q745fgqr8rsnxjj85qljgfsx9f3nrj7dt6whruc"]
+                "addresses": ["xxxx"]
             }
         },
         {
             "value": value1,
             "scriptPubKey": {
                 "hex": scriptPubKey1_hex,
-                "addresses": ["bc1qztxvreqp4jxy7tvn3xxhqnv3vfkmm6gk83e8c6"]
+                "addresses": ["xxxx"]
             }
         }
     ]
